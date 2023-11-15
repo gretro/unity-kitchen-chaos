@@ -1,11 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ClearCounter : MonoBehaviour
 {
+    [SerializeField]
+    private KitchenObjectSO toSpawn;
+
+    [SerializeField]
+    private Transform spawnPoint;
+
     public void Interact()
     {
-        Debug.Log("ClearCounter.Interact()");
+        var spawnedObj = GameObject.Instantiate(toSpawn.prefab, spawnPoint);
+        spawnedObj.transform.localPosition = Vector3.zero;
     }
 }

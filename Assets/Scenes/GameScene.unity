@@ -141,6 +141,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: ClearCounter (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 7943725247492650817, guid: c80dc65c34cff1d4dbd2891ed8b80f5c,
+        type: 3}
+      propertyPath: prefab
+      value: 
+      objectReference: {fileID: 7984620854084593548, guid: a2d95965ee20b9b4db25a368f5936a6a,
+        type: 3}
+    - target: {fileID: 7943725247492650817, guid: c80dc65c34cff1d4dbd2891ed8b80f5c,
+        type: 3}
+      propertyPath: toSpawn
+      value: 
+      objectReference: {fileID: 11400000, guid: 9adc1e3885a4d1540aa3c467a6a45bfe,
+        type: 2}
     - target: {fileID: 9041718239814290079, guid: c80dc65c34cff1d4dbd2891ed8b80f5c,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -983,6 +995,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: ClearCounter
       objectReference: {fileID: 0}
+    - target: {fileID: 7943725247492650817, guid: c80dc65c34cff1d4dbd2891ed8b80f5c,
+        type: 3}
+      propertyPath: prefab
+      value: 
+      objectReference: {fileID: 7984620854084593548, guid: 51cee1a1bdf0cc94dae67b00dbdb1174,
+        type: 3}
+    - target: {fileID: 7943725247492650817, guid: c80dc65c34cff1d4dbd2891ed8b80f5c,
+        type: 3}
+      propertyPath: toSpawn
+      value: 
+      objectReference: {fileID: 11400000, guid: 4c7d2f4c2cefde940b0bc8cae3c40083,
+        type: 2}
     - target: {fileID: 9041718239814290079, guid: c80dc65c34cff1d4dbd2891ed8b80f5c,
         type: 3}
       propertyPath: m_LocalPosition.x
