@@ -42,7 +42,6 @@ GameObject:
   - component: {fileID: 9041718239814290079}
   - component: {fileID: 7937548178511915943}
   - component: {fileID: 7943725247492650817}
-  - component: {fileID: 286480652386548893}
   m_Layer: 6
   m_Name: ClearCounter
   m_TagString: Untagged
@@ -101,20 +100,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9db99e8c6250a384097873622aa67f8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tomatoPrefab: {fileID: 0}
-  spawnPoint: {fileID: 5647185901631488389}
---- !u!114 &286480652386548893
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2080165215882966694}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 05a7ec5f01db044429dbc51f267eec2d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  toSpawn: {fileID: 0}
+  hookPoint: {fileID: 5647185901631488389}
   selectedCounterVisual: {fileID: 437946252382521168}
 --- !u!1001 &4152906871928529914
 PrefabInstance:

@@ -1,28 +1,25 @@
+using Assets.Scripts;
 using Cinemachine.Utility;
 using System;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IKitchenObjectHolder
 {
-    public static Player Instance { get; private set; }
-
-    public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
-    public class OnSelectedCounterChangedEventArgs : EventArgs
-    {
-        public ClearCounter SelectedCounter { get; set; }
-    }
-
+    [Header("Movement")]
     [SerializeField]
     private float moveSpeed = 7f;
-
     [SerializeField]
     private float rotateSpeed = 10f;
 
+    [Header("Controls")]
     [SerializeField]
     private GameInput gameInput;
 
+    [Header("Interactions")]
     [SerializeField]
     private LayerMask countersLayerMask;
+    [SerializeField]
+    private Transform hookPoint;
 
     private float playerRadius = 0.7f;
     private float playerHeight = 2f;
@@ -30,38 +27,26 @@ public class Player : MonoBehaviour
 
     public bool IsWalking { get; private set; }
 
-    private ClearCounter selectedCounter;
-    public ClearCounter SelectedCounter
+    private IInteractable selectedInteractable;
+    public IInteractable SelectedInteractable
     {
         get
         {
-            return selectedCounter;
+            return selectedInteractable;
         }
         private set
         {
-            selectedCounter = value;
-            if (OnSelectedCounterChanged != null)
+            if (value != selectedInteractable)
             {
-                var evnt = new OnSelectedCounterChangedEventArgs()
-                {
-                    SelectedCounter = value,
-                };
-                OnSelectedCounterChanged.Invoke(this, evnt);
+                selectedInteractable?.Unselect();
+                
+                selectedInteractable = value;
+                selectedInteractable?.Select();
             }
         }
     }
 
-    private void Awake()
-    {
-        if (Instance != null)
-        {
-            Debug.LogError("Player already exists!");
-
-            Destroy(gameObject);
-            return;
-        }
-        Instance = this;
-    }
+    private KitchenObject heldObject;
 
     private void Start()
     {
@@ -146,30 +131,72 @@ public class Player : MonoBehaviour
     {
         if (Physics.Raycast(transform.position, transform.forward, out var raycastHit, interactionDistance, countersLayerMask))
         {
-            if (raycastHit.collider.gameObject.TryGetComponent<ClearCounter>(out var clearCounter))
+            if (raycastHit.collider.gameObject.TryGetComponent<IInteractable>(out var interactable))
             {
-                if (SelectedCounter != clearCounter)
-                {
-                    SelectedCounter = clearCounter;
-                }
+                SelectedInteractable = interactable;
             } 
             else
             {
-                SelectedCounter = null;
+                SelectedInteractable = null;
             }
         } 
         else
         {
-            SelectedCounter = null;
+            SelectedInteractable = null;
         }
         
     }
 
     private void OnInteractAction(object sender, EventArgs e)
     {
-        if (SelectedCounter != null)
+        if (SelectedInteractable != null)
         {
-            SelectedCounter.Interact();
+            SelectedInteractable.Interact(this);
         }
+    }
+
+    public bool HoldsObject()
+    {
+        return this.heldObject != null;
+    }
+
+    public KitchenObject GetHeldObject()
+    {
+        return this.heldObject;
+    }
+
+    public bool CanReceiveObject()
+    {
+        return !this.HoldsObject();
+    }
+
+    public void ReceiveObject(KitchenObject kitchenObject)
+    {
+        if (!CanReceiveObject())
+        {
+            Debug.LogError("Player already holds an object!");
+            return;
+        }
+
+        this.heldObject = kitchenObject;
+        kitchenObject.transform.SetParent(hookPoint);
+        kitchenObject.transform.localPosition = Vector3.zero;
+    }
+
+    public void TransferObject(IKitchenObjectHolder target)
+    {
+        if (!this.HoldsObject())
+        {
+            Debug.LogError("Player does not hold an object!");
+            return;
+        }
+
+        if (!target.CanReceiveObject()) {             
+            Debug.LogError("Target already holds an object!");
+            return;
+        }
+
+        target.ReceiveObject(this.heldObject);
+        this.heldObject = null;
     }
 }

@@ -1,22 +1,19 @@
+using Assets.Scripts;
 using UnityEngine;
 
-public class SelectedCounterVisual : MonoBehaviour
+public partial class ClearCounter : MonoBehaviour, IInteractable
 {
+    [Header("Visuals")]
     [SerializeField]
     private GameObject selectedCounterVisual;
 
-    private ClearCounter counter;
-
-    public void Start()
+    public void Select()
     {
-        counter = GetComponent<ClearCounter>();
-        Player.Instance.OnSelectedCounterChanged += OnSelectedCounterChanged;
+        this.selectedCounterVisual.SetActive(true);
     }
 
-    private void OnSelectedCounterChanged(object sender, Player.OnSelectedCounterChangedEventArgs e)
+    public void Unselect()
     {
-        var isSelected = e.SelectedCounter == counter;
-
-        selectedCounterVisual.SetActive(isSelected);
+        this.selectedCounterVisual.SetActive(false);
     }
 }
