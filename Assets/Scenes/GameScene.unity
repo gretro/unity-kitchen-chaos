@@ -963,11 +963,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: CuttingCounter
       objectReference: {fileID: 0}
-    - target: {fileID: 2948760968322958697, guid: 27555bcd430f28e4ea177e78668756fd,
-        type: 3}
-      propertyPath: m_FillOrigin
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 7375349122937331462, guid: 27555bcd430f28e4ea177e78668756fd,
         type: 3}
       propertyPath: m_LocalRotation.w
