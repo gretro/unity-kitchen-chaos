@@ -1,14 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public interface IKitchenObjectHolder
 {
     bool HoldsObject();
 
     KitchenObject GetHeldObject();
 
-    bool CanReceiveObject();
+    bool CanReceiveObject(KitchenObject kitchenObject);
 
     void ReceiveObject(KitchenObject kitchenObject);
 }

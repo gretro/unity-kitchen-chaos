@@ -27,21 +27,22 @@ public class Player : MonoBehaviour, IKitchenObjectHolder
 
     public bool IsWalking { get; private set; }
 
-    private IInteractable selectedInteractable;
-    public IInteractable SelectedInteractable
+    private Selectable selection;
+
+    public Selectable Selection
     {
         get
         {
-            return selectedInteractable;
+            return selection;
         }
         private set
         {
-            if (value != selectedInteractable)
+            if (value != selection)
             {
-                selectedInteractable?.Unselect();
-                
-                selectedInteractable = value;
-                selectedInteractable?.Select();
+                selection?.Unselect();
+
+                selection = value;
+                selection?.Select();
             }
         }
     }
@@ -51,6 +52,7 @@ public class Player : MonoBehaviour, IKitchenObjectHolder
     private void Start()
     {
         gameInput.OnInteractAction += OnInteractAction;
+        gameInput.OnAlternateInteractAction += OnAlternateInteractAction;
     }
 
     private void Update()
@@ -131,27 +133,35 @@ public class Player : MonoBehaviour, IKitchenObjectHolder
     {
         if (Physics.Raycast(transform.position, transform.forward, out var raycastHit, interactionDistance, countersLayerMask))
         {
-            if (raycastHit.collider.gameObject.TryGetComponent<IInteractable>(out var interactable))
+            if (raycastHit.collider.gameObject.TryGetComponent<Selectable>(out var selectable))
             {
-                SelectedInteractable = interactable;
-            } 
+                Selection = selectable;
+            }
             else
             {
-                SelectedInteractable = null;
+                Selection = null;
             }
-        } 
+        }
         else
         {
-            SelectedInteractable = null;
+            Selection = null;
         }
-        
+
     }
 
     private void OnInteractAction(object sender, EventArgs e)
     {
-        if (SelectedInteractable != null)
+        if (Selection != null && Selection.TryGetComponent<IInteractable>(out var interactable))
         {
-            SelectedInteractable.Interact(this);
+            interactable.Interact(this);
+        }
+    }
+
+    private void OnAlternateInteractAction(object sender, EventArgs e)
+    {
+        if (Selection != null && Selection.TryGetComponent<IInteractable>(out var interactable))
+        {
+            interactable.AlternateInteract(this);
         }
     }
 
@@ -165,16 +175,16 @@ public class Player : MonoBehaviour, IKitchenObjectHolder
         return this.heldObject;
     }
 
-    public bool CanReceiveObject()
+    public bool CanReceiveObject(KitchenObject _)
     {
         return !this.HoldsObject();
     }
 
     public void ReceiveObject(KitchenObject kitchenObject)
     {
-        if (!CanReceiveObject())
+        if (!CanReceiveObject(kitchenObject))
         {
-            Debug.LogError("Player already holds an object!");
+            Debug.LogError($"Player cannot receive object {kitchenObject.name}");
             return;
         }
 
@@ -187,12 +197,13 @@ public class Player : MonoBehaviour, IKitchenObjectHolder
     {
         if (!this.HoldsObject())
         {
-            Debug.LogError("Player does not hold an object!");
+            Debug.Log("Player does not hold an object!");
             return;
         }
 
-        if (!target.CanReceiveObject()) {             
-            Debug.LogError("Target already holds an object!");
+        if (!target.CanReceiveObject(this.heldObject))
+        {
+            Debug.Log($"Target is unable to receive the object {this.heldObject.name}");
             return;
         }
 

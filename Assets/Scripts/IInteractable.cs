@@ -2,9 +2,9 @@
 {
     public interface IInteractable
     {
-        void Select();
-        void Unselect();
 
         void Interact(Player source);
+
+        void AlternateInteract(Player source);
     }
 }
