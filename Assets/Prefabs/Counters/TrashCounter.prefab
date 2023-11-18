@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 9006531701288924600}
   - component: {fileID: 7540109163474175077}
   m_Layer: 6
-  m_Name: Trash Counter
+  m_Name: TrashCounter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
