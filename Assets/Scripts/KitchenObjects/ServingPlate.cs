@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class ServingPlate : MonoBehaviour, IKitchenObjectHolder
@@ -18,6 +19,9 @@ public class ServingPlate : MonoBehaviour, IKitchenObjectHolder
 
     [SerializeField] private KitchenObjectSO tomatoDefinition;
     [SerializeField] private GameObject tomato;
+
+    [SerializeField] private GameObject ingredientsUI;
+    [SerializeField] private GameObject ingredientTemplate;
 
     private Dictionary<string, GameObject> ingredientVisuals;
 
@@ -93,9 +97,25 @@ public class ServingPlate : MonoBehaviour, IKitchenObjectHolder
             if (gameObject != null)
             {
                 gameObject.SetActive(true);
+                AddIngredientToUI(servingPlateIngredient);
             }
 
             GameObject.Destroy(kitchenObject.gameObject);
         }
+    }
+
+    private void AddIngredientToUI(ServingPlateIngredient ingredient)
+    {
+        var instance = GameObject.Instantiate(ingredientTemplate, ingredientsUI.transform);
+        instance.name = $"{ingredient.KitchenObjectSO.name} Icon";
+        var images = instance.GetComponentsInChildren<UnityEngine.UI.Image>();
+
+        var icon = images.Where(img => img.CompareTag("Icon")).FirstOrDefault();
+        if (icon != null)
+        {
+            icon.sprite = ingredient.KitchenObjectSO.sprite;
+        }
+
+        instance.SetActive(true);
     }
 }
