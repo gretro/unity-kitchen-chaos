@@ -118,4 +118,9 @@ public class ServingPlate : MonoBehaviour, IKitchenObjectHolder
 
         instance.SetActive(true);
     }
+
+    public IEnumerable<ServingPlateIngredient> GetIngredients()
+    {
+        return heldIngredients.Values;
+    }
 }
