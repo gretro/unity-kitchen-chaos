@@ -8,11 +8,6 @@ public class TrashCounter : MonoBehaviour, IKitchenObjectHolder, IInteractable
         return true;
     }
 
-    public KitchenObject GetHeldObject()
-    {
-        return null;
-    }
-
     public bool HoldsObject()
     {
         return false;

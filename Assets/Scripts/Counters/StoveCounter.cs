@@ -14,14 +14,14 @@ public class StoveCounter : MonoBehaviour, IKitchenObjectHolder, IInteractable
 
     private KitchenObject heldObject;
 
+    private void Start()
+    {
+        this.progressBar.Hide();
+    }
+
     public bool CanReceiveObject(KitchenObject kitchenObject)
     {
         return !this.HoldsObject() && kitchenObject.TryGetComponent<Fryable>(out var _);
-    }
-
-    public KitchenObject GetHeldObject()
-    {
-        return this.heldObject;
     }
 
     public bool HoldsObject()

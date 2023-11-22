@@ -15,3 +15,4 @@ MonoBehaviour:
   prefab: {fileID: 7984620854084593548, guid: 3910839d2125ba5428f8d4b39d446e38, type: 3}
   sprite: {fileID: 21300000, guid: 77b28124b8bda494381c80bd5aa42c22, type: 3}
   objectName: Bread
+  isIngredient: 1

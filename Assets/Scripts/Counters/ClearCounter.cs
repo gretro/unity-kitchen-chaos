@@ -10,17 +10,21 @@ public class ClearCounter : MonoBehaviour, IKitchenObjectHolder, IInteractable
 
     public void Interact(Player source)
     {
-        Debug.Log("ClearCounter.Interact() called", source);
-
         if (this.HoldsObject())
         {
-            Debug.Log("ClearCounter holds an object");
             var canTransfer = source.CanReceiveObject(this.heldObject);
 
             if (canTransfer)
             {
                 source.ReceiveObject(this.heldObject);
                 this.heldObject = null;
+            }
+            else if (source.HoldsObject() && this.heldObject.TryGetComponent<IKitchenObjectHolder>(out var innerHolder))
+            {
+                if (innerHolder.CanReceiveObject(source.GetHeldObject()))
+                {
+                    source.TransferObject(innerHolder);
+                }
             }
             else
             {
@@ -37,19 +41,19 @@ public class ClearCounter : MonoBehaviour, IKitchenObjectHolder, IInteractable
 
     public void AlternateInteract(Player source) { }
 
-    public KitchenObject GetHeldObject()
-    {
-        return this.heldObject;
-    }
-
     public bool HoldsObject()
     {
         return this.heldObject != null;
     }
 
-    public bool CanReceiveObject(KitchenObject _)
+    public bool CanReceiveObject(KitchenObject kitchenObject)
     {
-        return !HoldsObject();
+        if (!this.HoldsObject())
+        {
+            return true;
+        }
+
+        return this.heldObject.TryGetComponent<IKitchenObjectHolder>(out var innerHolder) && innerHolder.CanReceiveObject(kitchenObject);
     }
 
     public void ReceiveObject(KitchenObject kitchenObject)
@@ -60,8 +64,16 @@ public class ClearCounter : MonoBehaviour, IKitchenObjectHolder, IInteractable
             return;
         }
 
-        this.heldObject = kitchenObject;
-        kitchenObject.transform.SetParent(hookPoint);
-        kitchenObject.transform.localPosition = Vector3.zero;
+        if (this.heldObject == null)
+        {
+            this.heldObject = kitchenObject;
+            kitchenObject.transform.SetParent(hookPoint);
+            kitchenObject.transform.localPosition = Vector3.zero;
+        }
+        else
+        {
+            var innerObjectHolder = this.heldObject.GetComponent<IKitchenObjectHolder>();
+            innerObjectHolder.ReceiveObject(kitchenObject);
+        }
     }
 }

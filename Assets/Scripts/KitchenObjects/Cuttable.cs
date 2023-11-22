@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Cuttable : MonoBehaviour
+public class Cuttable : MonoBehaviour, IIngredient
 {
     [Header("Cutting")]
     [SerializeField]
@@ -25,5 +25,15 @@ public class Cuttable : MonoBehaviour
     public CuttingRecipeSO GetRecipe()
     {
         return recipe;
+    }
+
+    public bool CanBePlated()
+    {
+        return IsCut;
+    }
+
+    public bool IsDesirable()
+    {
+        return true;
     }
 }

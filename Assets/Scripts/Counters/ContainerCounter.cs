@@ -29,16 +29,17 @@ public class ContainerCounter : MonoBehaviour, IInteractable
 
     public void Interact(Player source)
     {
-        // In the case of the player, we never check the nature of the KitchenObject. We avoid an instanciation of the object if we don't need it.
-        if (!source.CanReceiveObject(null))
+        var dispensedObject = KitchenObject.Spawn(dispensed, null);
+
+        if (!source.CanReceiveObject(dispensedObject))
         {
             Debug.Log("Player already holds an item and cannot receive another");
+
+            GameObject.Destroy(dispensedObject.gameObject);
             return;
         }
 
         animator.SetTrigger(ANIMATION_OPEN_CLOSE);
-
-        var dispensedObject = KitchenObject.Spawn(dispensed, null);
         source.ReceiveObject(dispensedObject);
     }
 

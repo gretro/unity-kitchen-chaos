@@ -175,9 +175,14 @@ public class Player : MonoBehaviour, IKitchenObjectHolder
         return this.heldObject;
     }
 
-    public bool CanReceiveObject(KitchenObject _)
+    public bool CanReceiveObject(KitchenObject kitchenObject)
     {
-        return !this.HoldsObject();
+        if (!this.HoldsObject())
+        {
+            return true;
+        }
+
+        return this.heldObject.TryGetComponent<IKitchenObjectHolder>(out var innerHolder) && innerHolder.CanReceiveObject(kitchenObject);
     }
 
     public void ReceiveObject(KitchenObject kitchenObject)
@@ -188,9 +193,17 @@ public class Player : MonoBehaviour, IKitchenObjectHolder
             return;
         }
 
-        this.heldObject = kitchenObject;
-        kitchenObject.transform.SetParent(hookPoint);
-        kitchenObject.transform.localPosition = Vector3.zero;
+        if (this.heldObject == null)
+        {
+            this.heldObject = kitchenObject;
+            kitchenObject.transform.SetParent(hookPoint);
+            kitchenObject.transform.localPosition = Vector3.zero;
+        }
+        else
+        {
+            var innerObjectHolder = this.heldObject.GetComponent<IKitchenObjectHolder>();
+            innerObjectHolder.ReceiveObject(kitchenObject);
+        }
     }
 
     public void TransferObject(IKitchenObjectHolder target)

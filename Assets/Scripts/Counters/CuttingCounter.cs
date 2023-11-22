@@ -37,11 +37,6 @@ public class CuttingCounter : MonoBehaviour, IKitchenObjectHolder, IInteractable
         return false;
     }
 
-    public KitchenObject GetHeldObject()
-    {
-        return this.heldObject;
-    }
-
     public bool HoldsObject()
     {
         return this.heldObject != null;

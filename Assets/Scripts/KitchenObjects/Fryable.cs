@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Fryable : MonoBehaviour
+public class Fryable : MonoBehaviour, IIngredient
 {
     public event EventHandler<FryableUpdatedEventArgs> FryableUpdated;
 
@@ -122,5 +122,15 @@ public class Fryable : MonoBehaviour
             CurrentProgress = timeCooked,
             MaxProgress = maxTime
         });
+    }
+
+    public bool CanBePlated()
+    {
+        return State != FryState.Raw;
+    }
+
+    public bool IsDesirable()
+    {
+        return State == FryState.Cooked;
     }
 }

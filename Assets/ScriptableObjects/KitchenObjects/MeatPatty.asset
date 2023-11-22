@@ -15,3 +15,4 @@ MonoBehaviour:
   prefab: {fileID: 7984620854084593548, guid: 350e4ba5ba4fb1c4e95ce1b49926c68a, type: 3}
   sprite: {fileID: 21300000, guid: aa1bacc24dde76e47b2ec0dd4e82385b, type: 3}
   objectName: Meat Patty
+  isIngredient: 1
