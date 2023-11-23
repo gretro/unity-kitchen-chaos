@@ -21,6 +21,9 @@ public class Player : MonoBehaviour, IKitchenObjectHolder
     [SerializeField]
     private Transform hookPoint;
 
+    [Header("Events")]
+    [SerializeField] private EventQueue eventQueue;
+
     private float playerRadius = 0.7f;
     private float playerHeight = 2f;
     private float interactionDistance = 2f;
@@ -223,6 +226,8 @@ public class Player : MonoBehaviour, IKitchenObjectHolder
                 Debug.LogError($"Player cannot receive object {kitchenObject.name}");
             }
         }
+
+        eventQueue.DispatchEvent(EventQueue.OnObjectPickup, this.gameObject, kitchenObject.ObjectType);
     }
 
     public void TransferObject(IKitchenObjectHolder target)

@@ -6,6 +6,9 @@ public class ClearCounter : MonoBehaviour, IKitchenObjectHolder, IInteractable
     [SerializeField]
     private Transform hookPoint;
 
+    [Header("Events")]
+    [SerializeField] private EventQueue eventQueue;
+
     private KitchenObject heldObject = null;
 
     public void Interact(Player source)
@@ -69,6 +72,8 @@ public class ClearCounter : MonoBehaviour, IKitchenObjectHolder, IInteractable
             this.heldObject = kitchenObject;
             kitchenObject.transform.SetParent(hookPoint);
             kitchenObject.transform.localPosition = Vector3.zero;
+
+            eventQueue.DispatchEvent(EventQueue.OnObjectDrop, this.gameObject, kitchenObject.ObjectType);
         }
         else
         {

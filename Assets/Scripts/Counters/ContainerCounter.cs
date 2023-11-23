@@ -16,6 +16,9 @@ public class ContainerCounter : MonoBehaviour, IInteractable
     [SerializeField]
     private SpriteRenderer spriteRenderer;
 
+    [Header("Events")]
+    [SerializeField] private EventQueue eventQueue;
+
     private void Start()
     {
         if (dispensed == null)
@@ -41,6 +44,7 @@ public class ContainerCounter : MonoBehaviour, IInteractable
 
         animator.SetTrigger(ANIMATION_OPEN_CLOSE);
         source.ReceiveObject(dispensedObject);
+        eventQueue.DispatchEvent(EventQueue.OnObjectPickup, this.gameObject, dispensedObject.ObjectType);
     }
 
     public void AlternateInteract(Player source) { }

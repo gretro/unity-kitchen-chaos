@@ -23,6 +23,10 @@ public class DeliveryManager : MonoBehaviour
     [SerializeField]
     private int maxPendingOrders = 4;
 
+    [Header("Events")]
+    [SerializeField]
+    private EventQueue eventQueue;
+
     private float orderTimer = 0f;
     private readonly List<MealSO> pendingOrders = new();
 
@@ -59,7 +63,7 @@ public class DeliveryManager : MonoBehaviour
         return pendingOrders;
     }
 
-    public void DeliverOrder(IEnumerable<ServingPlateIngredient> ingredients)
+    public void DeliverOrder(GameObject origin, IEnumerable<ServingPlateIngredient> ingredients)
     {
         for (var i = 0; i < pendingOrders.Count; i++)
         {
@@ -95,10 +99,12 @@ public class DeliveryManager : MonoBehaviour
 
                 Debug.Log($"Order for {pendingOrder.mealName} delivered!");
 
+                eventQueue.DispatchEvent(EventQueue.OnDeliverySuccess, origin);
                 return;
             }
         }
 
+        eventQueue.DispatchEvent(EventQueue.OnDeliveryFailure, origin);
         Debug.Log("No order delivery match found");
     }
 }

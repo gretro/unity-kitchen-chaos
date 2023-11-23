@@ -115,6 +115,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hookPoint: {fileID: 5647185901631488389}
+  eventQueue: {fileID: 11400000, guid: d1f4c1ecd86f72c46b747135d61b4f18, type: 2}
 --- !u!1001 &6763460171596034436
 PrefabInstance:
   m_ObjectHideFlags: 0

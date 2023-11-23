@@ -105,6 +105,7 @@ MonoBehaviour:
   hookPoint: {fileID: 5647185901631488389}
   progressBar: {fileID: 5524304712542361107}
   animator: {fileID: 2156333691019050052}
+  eventQueue: {fileID: 11400000, guid: d1f4c1ecd86f72c46b747135d61b4f18, type: 2}
 --- !u!114 &5917782644445559605
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -14,6 +14,9 @@ public class CuttingCounter : MonoBehaviour, IKitchenObjectHolder, IInteractable
     [SerializeField]
     private Animator animator;
 
+    [Header("Events")]
+    [SerializeField] private EventQueue eventQueue;
+
     private KitchenObject heldObject;
     private int cutProgress = 0;
 
@@ -100,6 +103,7 @@ public class CuttingCounter : MonoBehaviour, IKitchenObjectHolder, IInteractable
 
         cutProgress++;
         progressBar.UpdateProgress(cutProgress, cuttable.GetRecipe().NumberOfCuts);
+        eventQueue.DispatchEvent(EventQueue.OnIngredientChop, this.gameObject, heldObject.ObjectType);
 
         if (cutProgress >= cuttable.GetRecipe().NumberOfCuts)
         {

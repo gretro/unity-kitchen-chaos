@@ -82,6 +82,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e1135e37ebc93341993dc8ca2682f13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  eventQueue: {fileID: 11400000, guid: d1f4c1ecd86f72c46b747135d61b4f18, type: 2}
 --- !u!1001 &713104986876505391
 PrefabInstance:
   m_ObjectHideFlags: 0

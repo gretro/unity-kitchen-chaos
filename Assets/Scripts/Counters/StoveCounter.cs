@@ -12,7 +12,11 @@ public class StoveCounter : MonoBehaviour, IKitchenObjectHolder, IInteractable
     [SerializeField]
     private ProgressBarController progressBar;
 
+    [Header("Events")]
+    [SerializeField] private EventQueue eventQueue;
+
     private KitchenObject heldObject;
+    private Fryable.FryState? lastFryState;
 
     private void Start()
     {
@@ -41,6 +45,7 @@ public class StoveCounter : MonoBehaviour, IKitchenObjectHolder, IInteractable
         this.heldObject.transform.localPosition = Vector3.zero;
 
         var heldFryableObject = this.heldObject.GetComponent<Fryable>();
+        this.lastFryState = null;
         heldFryableObject.StartCooking();
         heldFryableObject.FryableUpdated += this.OnFryableUpdated;
 
@@ -54,13 +59,24 @@ public class StoveCounter : MonoBehaviour, IKitchenObjectHolder, IInteractable
 
     private void OnFryableUpdated(object sender, Fryable.FryableUpdatedEventArgs e)
     {
-        if (e.State == Fryable.FryState.Burned)
+        if (e.State != lastFryState)
         {
-            this.progressBar.Reset();
-            this.progressBar.Hide();
+            lastFryState = e.State;
 
-            var fryable = sender as Fryable;
-            fryable.FryableUpdated -= this.OnFryableUpdated;
+            if (e.State == Fryable.FryState.Cooked)
+            {
+                this.eventQueue.DispatchEvent(EventQueue.OnStoveCooked, this.gameObject, heldObject.ObjectType);
+            }
+            else if (e.State == Fryable.FryState.Burned)
+            {
+                this.progressBar.Reset();
+                this.progressBar.Hide();
+
+                this.eventQueue.DispatchEvent(EventQueue.OnStoveBurned, this.gameObject, heldObject.ObjectType);
+
+                var fryable = sender as Fryable;
+                fryable.FryableUpdated -= this.OnFryableUpdated;
+            }
         }
 
         if (e.MaxProgress == 0f)
@@ -79,6 +95,8 @@ public class StoveCounter : MonoBehaviour, IKitchenObjectHolder, IInteractable
         {
             cookingElement.SetActive(true);
         }
+
+        this.eventQueue.DispatchEvent(EventQueue.OnStoveStarted, this.gameObject);
     }
 
     private void DisableCookingElements()
@@ -87,6 +105,8 @@ public class StoveCounter : MonoBehaviour, IKitchenObjectHolder, IInteractable
         {
             cookingElement.SetActive(false);
         }
+
+        this.eventQueue.DispatchEvent(EventQueue.OnStoveStopped, this.gameObject);
     }
 
     public void Interact(Player source)

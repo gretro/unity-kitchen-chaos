@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class TrashCounter : MonoBehaviour, IKitchenObjectHolder, IInteractable
 {
+    [Header("Events")]
+    [SerializeField] private EventQueue eventQueue;
+
     public bool CanReceiveObject(KitchenObject kitchenObject)
     {
         return true;
@@ -26,5 +29,6 @@ public class TrashCounter : MonoBehaviour, IKitchenObjectHolder, IInteractable
     public void ReceiveObject(KitchenObject kitchenObject)
     {
         GameObject.Destroy(kitchenObject.gameObject);
+        eventQueue.DispatchEvent(EventQueue.OnItemTrashed, this.gameObject, kitchenObject.ObjectType);
     }
 }

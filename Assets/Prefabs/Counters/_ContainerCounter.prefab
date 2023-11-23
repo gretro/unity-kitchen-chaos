@@ -72,6 +72,7 @@ MonoBehaviour:
   dispensed: {fileID: 0}
   animator: {fileID: 7841902959221681754}
   spriteRenderer: {fileID: 8697163244249482516}
+  eventQueue: {fileID: 11400000, guid: d1f4c1ecd86f72c46b747135d61b4f18, type: 2}
 --- !u!114 &6706908055649545406
 MonoBehaviour:
   m_ObjectHideFlags: 0

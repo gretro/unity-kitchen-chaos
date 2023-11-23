@@ -34,7 +34,7 @@ public class DeliveryCounter : MonoBehaviour, IKitchenObjectHolder, IInteractabl
         }
 
         var servingPlate = kitchenObject.GetComponent<ServingPlate>();
-        deliveryManager.DeliverOrder(servingPlate.GetIngredients());
+        deliveryManager.DeliverOrder(this.gameObject, servingPlate.GetIngredients());
 
         GameObject.Destroy(kitchenObject.gameObject);
     }
