@@ -1,0 +1,7 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/Orders.uss?fileID=7433441132597879392&amp;guid=82955f6f15a260e4c9366b942c6c2532&amp;type=3#Orders" />
+    <ui:VisualElement name="Order" class="order" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.39);">
+        <ui:Label tabindex="-1" text="Basic Burger" parse-escape-sequences="true" display-tooltip-when-elided="true" name="OrderName" enable-rich-text="false" class="order-name" style="font-size: 18px;" />
+        <ui:VisualElement name="Ingredients" class="order-ingredients" style="flex-grow: 1; flex-direction: row; flex-wrap: wrap; padding-top: 5px; padding-bottom: 5px;" />
+    </ui:VisualElement>
+</ui:UXML>

@@ -1,0 +1,4 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/Orders.uss?fileID=7433441132597879392&amp;guid=82955f6f15a260e4c9366b942c6c2532&amp;type=3#Orders" />
+    <ui:VisualElement name="Ingredient" class="order-ingredient" style="flex-grow: 0; background-image: url(&apos;project://database/Assets/_Assets/Textures/Icons/MeatPattyCooked.png?fileID=21300000&amp;guid=f1f50c7ef90b19741b26f2040806cf56&amp;type=3#MeatPattyCooked&apos;); flex-shrink: 0;" />
+</ui:UXML>

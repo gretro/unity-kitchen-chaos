@@ -1,9 +1,19 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public class DeliveryManager : MonoBehaviour
 {
+    public event EventHandler<MealChangedEvent> OnMealAdded;
+    public event EventHandler<MealChangedEvent> OnMealRemoved;
+
+    public class MealChangedEvent : EventArgs
+    {
+        public MealSO Meal { get; set; }
+        public int Index { get; set; }
+    }
+
     [SerializeField]
     private List<MealSO> orderableMeals = new();
 
@@ -16,6 +26,11 @@ public class DeliveryManager : MonoBehaviour
     private float orderTimer = 0f;
     private readonly List<MealSO> pendingOrders = new();
 
+    private void Start()
+    {
+        GenerateOrder();
+    }
+
     private void Update()
     {
         if (pendingOrders.Count >= maxPendingOrders)
@@ -27,18 +42,29 @@ public class DeliveryManager : MonoBehaviour
         if (orderTimer >= orderIntervalInSeconds)
         {
             orderTimer = 0f;
-
-            var order = orderableMeals[Random.Range(0, orderableMeals.Count)];
-            pendingOrders.Add(order);
-
-            Debug.Log($"New order: {order.mealName}");
+            GenerateOrder();
         }
+    }
+
+    private void GenerateOrder()
+    {
+        var order = orderableMeals[UnityEngine.Random.Range(0, orderableMeals.Count)];
+        pendingOrders.Add(order);
+
+        this.OnMealAdded?.Invoke(this, new MealChangedEvent { Meal = order, Index = pendingOrders.Count - 1 });
+    }
+
+    public IEnumerable<MealSO> GetPendingOrders()
+    {
+        return pendingOrders;
     }
 
     public void DeliverOrder(IEnumerable<ServingPlateIngredient> ingredients)
     {
-        foreach (var pendingOrder in pendingOrders)
+        for (var i = 0; i < pendingOrders.Count; i++)
         {
+            var pendingOrder = pendingOrders[i];
+
             if (ingredients.Count() != pendingOrder.ingredients.Count)
             {
                 continue;
@@ -65,6 +91,8 @@ public class DeliveryManager : MonoBehaviour
             if (isMatch)
             {
                 pendingOrders.Remove(pendingOrder);
+                this.OnMealRemoved?.Invoke(this, new MealChangedEvent { Meal = pendingOrder, Index = i });
+
                 Debug.Log($"Order for {pendingOrder.mealName} delivered!");
 
                 return;
