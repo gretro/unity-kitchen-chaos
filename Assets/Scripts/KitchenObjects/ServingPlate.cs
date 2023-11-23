@@ -30,8 +30,9 @@ public class ServingPlate : MonoBehaviour, IKitchenObjectHolder
     private const string NOT_DESIRABLE = "undesirable";
     private const string DESIRABLE = "desirable";
 
-    private void Start()
+    private void Awake()
     {
+        // This logic has to be in Awake() in case an ingredient is placed on a just-spawned plate
         ingredientVisuals = new Dictionary<string, GameObject>()
         {
             { $"{breadDefinition.objectName}_{DESIRABLE}", bread },

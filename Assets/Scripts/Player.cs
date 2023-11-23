@@ -182,6 +182,11 @@ public class Player : MonoBehaviour, IKitchenObjectHolder
             return true;
         }
 
+        if (kitchenObject.TryGetComponent<IKitchenObjectHolder>(out var receivingHolder) && receivingHolder.CanReceiveObject(this.heldObject))
+        {
+            return true;
+        }
+
         return this.heldObject.TryGetComponent<IKitchenObjectHolder>(out var innerHolder) && innerHolder.CanReceiveObject(kitchenObject);
     }
 
@@ -201,8 +206,22 @@ public class Player : MonoBehaviour, IKitchenObjectHolder
         }
         else
         {
-            var innerObjectHolder = this.heldObject.GetComponent<IKitchenObjectHolder>();
-            innerObjectHolder.ReceiveObject(kitchenObject);
+            if (this.heldObject.TryGetComponent<IKitchenObjectHolder>(out var innerHolder))
+            {
+                innerHolder.ReceiveObject(kitchenObject);
+            }
+            else if (kitchenObject.TryGetComponent<IKitchenObjectHolder>(out var receivedHolder))
+            {
+                receivedHolder.ReceiveObject(this.heldObject);
+
+                this.heldObject = kitchenObject;
+                kitchenObject.transform.SetParent(hookPoint);
+                kitchenObject.transform.localPosition = Vector3.zero;
+            }
+            else
+            {
+                Debug.LogError($"Player cannot receive object {kitchenObject.name}");
+            }
         }
     }
 

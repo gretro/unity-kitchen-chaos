@@ -46,16 +46,16 @@ public class PlateCounter : MonoBehaviour, IInteractable
             return;
         }
 
-        if (source.HoldsObject())
+        var plate = KitchenObject.Spawn(this.plate, transform);
+        if (source.HoldsObject() && !source.CanReceiveObject(plate))
         {
-            Debug.Log("Player already holds an object");
+            Debug.Log("Player already holds an object and it cannot be placed on a plate");
             return;
         }
 
         availablePlates--;
         plates[availablePlates].SetActive(false);
 
-        var plate = KitchenObject.Spawn(this.plate, transform);
         source.ReceiveObject(plate);
 
         respawnTimer = 0f;
