@@ -22,6 +22,14 @@
     font-size: 24px;
 }
 
+.game-timer {
+    color: #ffffff;
+}
+
+.game-timer-tick {
+    color: #333333;
+}
+
 .order-ingredients {
     flex-direction: row;
     flex-wrap: wrap;
@@ -79,27 +87,26 @@
     font-size: 120px;
     color: rgb(255, 255, 255);
     -unity-font-style: bold;
-    -unity-text-outline: 5px #3C3C3C;
+    -unity-text-outline: 5px rgb(60, 60, 60);
     -unity-text-align: middle-center;
-
-    rotate: 5deg;
+    rotate: 2deg;
     transition: rotate 1000ms ease-in-out-sine;
 }
 
 .game-over-title-tock {
-	rotate: -5deg;
+    rotate: -2deg;
 }
 
 .game-over-subtitle {
-	font-size: 48px;
-	color: rgb(255, 255, 255);
+    font-size: 48px;
+    color: rgb(255, 255, 255);
     -unity-text-align: middle-center;
 }
 
 .game-over-score {
     font-size: 120px;
-    color: rgb(255, 255, 255)
+    color: rgb(255, 255, 255);
     -unity-font-style: bold;
-    -unity-text-outline: 5px #3C3C3C;
+    -unity-text-outline: 5px rgb(60, 60, 60);
     -unity-text-align: middle-center;
 }

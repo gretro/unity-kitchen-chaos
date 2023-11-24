@@ -5,6 +5,7 @@ using UnityEngine.UIElements;
 public class UIController : MonoBehaviour
 {
     private const float GAME_STATE_ANIMATION_TIME = 1f;
+    private const string GAME_TIMER_ANIMATION = "game-timer-tick";
     private const string GAME_STATE_CLASS = "game-state-tock";
     private const string GAMEOVER_TITLE_ANIMATION = "game-over-title-tock";
 
@@ -155,5 +156,10 @@ public class UIController : MonoBehaviour
         var time = $"{minutes}:{seconds:00}";
 
         lblTimer.text = time;
+
+        if (gameState.TimeRemaining < 5f)
+        {
+            lblTimer.ToggleInClassList(GAME_TIMER_ANIMATION);
+        }
     }
 }
