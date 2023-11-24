@@ -155,7 +155,7 @@ public class Player : MonoBehaviour, IKitchenObjectHolder
 
     private void OnInteractAction(object sender, EventArgs e)
     {
-        if (gameStateBus.GameStateQuery.QueryHandler() != GameManager.State.Playing)
+        if (gameStateBus.GameStateQuery.QueryHandler().State != GameManager.State.Playing)
         {
             return;
         }
@@ -168,7 +168,7 @@ public class Player : MonoBehaviour, IKitchenObjectHolder
 
     private void OnAlternateInteractAction(object sender, EventArgs e)
     {
-        if (gameStateBus.GameStateQuery.QueryHandler() != GameManager.State.Playing)
+        if (gameStateBus.GameStateQuery.QueryHandler().State != GameManager.State.Playing)
         {
             return;
         }

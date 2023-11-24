@@ -4,6 +4,10 @@ using UnityEngine.UIElements;
 
 public class UIController : MonoBehaviour
 {
+    private const float GAME_STATE_ANIMATION_TIME = 1f;
+    private const string GAME_STATE_CLASS = "game-state-tock";
+    private const string GAMEOVER_TITLE_ANIMATION = "game-over-title-tock";
+
     [Header("Templates")]
     [SerializeField]
     private VisualTreeAsset mealTemplate;
@@ -23,7 +27,12 @@ public class UIController : MonoBehaviour
     private Label lblTimer;
     private Label lblGameState;
 
-    private GameManager.State? lastState = null;
+    private VisualElement gameOverContainer;
+    private Label lblGameOverTitle;
+    private Label lblScore;
+
+    private float checkStateTick = 0f;
+    private float animationTick = GAME_STATE_ANIMATION_TIME * 0.75f;
 
     private void OnEnable()
     {
@@ -41,21 +50,45 @@ public class UIController : MonoBehaviour
         deliveryManager.OnMealRemoved += DeliveryManager_OnMealRemoved;
 
         lblTimer = uiDocument.rootVisualElement.Q<Label>("Timer");
-        lblGameState = uiDocument.rootVisualElement.Q<Label>("GameState");
-        gameStateBus.GameTick += HandleGameTick;
-
-        UpdateGameState(gameStateBus.GameStateQuery.RaiseQuery(), 0f);
         lblTimer.text = "";
+
+        lblGameState = uiDocument.rootVisualElement.Q<Label>("GameState");
+        var gameState = gameStateBus.GameStateQuery.RaiseQuery();
+        UpdateGameState(gameState);
+
+        gameOverContainer = uiDocument.rootVisualElement.Q<VisualElement>("GameOverOverlay");
+        gameOverContainer.style.display = DisplayStyle.None;
+
+        lblGameOverTitle = uiDocument.rootVisualElement.Q<Label>("GameOverTitle");
+        lblScore = uiDocument.rootVisualElement.Q<Label>("Score");
     }
 
     private void OnDisable()
     {
         deliveryManager.OnMealAdded -= DeliveryManager_OnMealAdded;
         deliveryManager.OnMealRemoved -= DeliveryManager_OnMealRemoved;
-
-        gameStateBus.GameTick -= HandleGameTick;
     }
 
+    private void Update()
+    {
+        checkStateTick += Time.deltaTime;
+        if (checkStateTick > 0.5f)
+        {
+            var gameState = gameStateBus.GameStateQuery.RaiseQuery();
+            UpdateGameState(gameState);
+            UpdateTimer(gameState);
+
+            checkStateTick = 0f;
+        }
+
+        animationTick += Time.deltaTime;
+        if (animationTick >= GAME_STATE_ANIMATION_TIME)
+        {
+            animationTick = 0f;
+            lblGameState.ToggleInClassList(GAME_STATE_CLASS);
+            lblGameOverTitle.ToggleInClassList(GAMEOVER_TITLE_ANIMATION);
+        }
+    }
 
     private void DeliveryManager_OnMealAdded(object sender, DeliveryManager.MealChangedEvent e)
     {
@@ -65,25 +98,6 @@ public class UIController : MonoBehaviour
     private void DeliveryManager_OnMealRemoved(object sender, DeliveryManager.MealChangedEvent e)
     {
         RemoveMealOrder(e.Index);
-    }
-
-    private void HandleGameTick(object sender, GameTickEvent e)
-    {
-        if (lastState != e.CurrentState)
-        {
-            lastState = e.CurrentState;
-        }
-
-        UpdateGameState(e.CurrentState, e.TimeRemaining);
-
-        if (e.CurrentState == GameManager.State.Playing || e.CurrentState == GameManager.State.GameOver)
-        {
-            UpdateTimer(e.TimeRemaining);
-        }
-        else
-        {
-            lblTimer.text = "";
-        }
     }
 
     private void AddMealOrder(MealSO mealOrder)
@@ -104,30 +118,39 @@ public class UIController : MonoBehaviour
         mealsContainer.Children().ElementAt(index).RemoveFromHierarchy();
     }
 
-    private void UpdateGameState(GameManager.State? state, float remainingTime)
+    private void UpdateGameState(GameState gameState)
     {
         var text = "";
 
-        switch (state)
+        switch (gameState.State)
         {
             case GameManager.State.WaitingToStart:
-                text = "Waiting for all players";
+                text = "Waiting";
                 break;
             case GameManager.State.Countdown:
-                text = $"{Mathf.FloorToInt(remainingTime) + 1}";
-                break;
-            case GameManager.State.GameOver:
-                text = "Game Over";
+                text = $"{Mathf.FloorToInt(gameState.TimeRemaining - 0.01f) + 1}";
                 break;
         }
 
         lblGameState.text = text;
+
+        if (gameState.State == GameManager.State.GameOver)
+        {
+            gameOverContainer.style.display = DisplayStyle.Flex;
+            lblScore.text = $"{gameStateBus.ScoreQuery.RaiseQuery()}";
+        }
     }
 
-    private void UpdateTimer(float remainingTime)
+    private void UpdateTimer(GameState gameState)
     {
-        var minutes = Mathf.FloorToInt(remainingTime / 60);
-        var seconds = Mathf.FloorToInt(remainingTime % 60);
+        if (gameState.State != GameManager.State.Playing && gameState.State != GameManager.State.GameOver)
+        {
+            lblTimer.text = "";
+            return;
+        }
+
+        var minutes = Mathf.FloorToInt(gameState.TimeRemaining / 60);
+        var seconds = Mathf.FloorToInt(gameState.TimeRemaining % 60);
 
         var time = $"{minutes}:{seconds:00}";
 

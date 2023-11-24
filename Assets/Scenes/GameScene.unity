@@ -940,7 +940,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   waitingToStartInSeconds: 3
   countdownInSeconds: 3
-  playTimeInSeconds: 90
+  playTimeInSeconds: 10
+  eventQueue: {fileID: 11400000, guid: d1f4c1ecd86f72c46b747135d61b4f18, type: 2}
   gameBus: {fileID: 11400000, guid: a457b099b4b9d654893430b418ab9b83, type: 2}
 --- !u!4 &382990137
 Transform:

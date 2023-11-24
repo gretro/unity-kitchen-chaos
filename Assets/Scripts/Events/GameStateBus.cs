@@ -4,19 +4,20 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "GameStateBus", menuName = "KitchenChaos/GameStateBus")]
 public class GameStateBus : ScriptableObject
 {
-    public event EventHandler<GameTickEvent> GameTick;
+    public event EventHandler<GameState> OnGameStateUpdated;
 
-    public Query<GameManager.State> GameStateQuery { get; private set; } = new("GameStateQuery");
+    public Query<GameState> GameStateQuery { get; private set; } = new("GameStateQuery");
 
-    public void Tick(GameManager.State currentState, float timeRemaining)
+    public Query<int> ScoreQuery { get; private set; } = new("ScoreQuery");
+
+    public void NotifyGameStateChanged(GameState gameState)
     {
-        GameTick?.Invoke(this, new GameTickEvent { CurrentState = currentState, TimeRemaining = timeRemaining });
+        OnGameStateUpdated?.Invoke(this, gameState);
     }
 }
 
-public class GameTickEvent : EventArgs
+public struct GameState
 {
-    public GameManager.State CurrentState { get; set; }
-
+    public GameManager.State State { get; set; }
     public float TimeRemaining { get; set; }
 }

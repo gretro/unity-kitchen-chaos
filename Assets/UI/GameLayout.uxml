@@ -9,7 +9,14 @@
             <ui:VisualElement name="OrdersHolder" style="flex-grow: 1;" />
         </ui:VisualElement>
     </ui:VisualElement>
-    <ui:VisualElement name="GameState" style="flex-grow: 1; align-items: center; justify-content: center; rotate: 10deg;">
-        <ui:Label tabindex="-1" text="Game State" parse-escape-sequences="true" display-tooltip-when-elided="true" name="GameState" enable-rich-text="false" style="font-size: 100px; -unity-font-style: bold; color: rgb(0, 130, 255); -unity-text-align: upper-center; -unity-text-outline-color: rgb(255, 255, 255); -unity-text-outline-width: 2px; text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.63);" />
+    <ui:VisualElement name="GameState" style="flex-grow: 1; align-items: center; justify-content: center; rotate: 0; position: absolute; left: 0; top: 0; right: 0; bottom: 0;">
+        <ui:Label tabindex="-1" text="Game State" parse-escape-sequences="true" display-tooltip-when-elided="true" name="GameState" enable-rich-text="false" class="game-state" style="-unity-font-style: bold; color: rgb(255, 255, 255); -unity-text-align: upper-center; -unity-text-outline-color: rgb(60, 60, 60); -unity-text-outline-width: 2px; text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.63);" />
+    </ui:VisualElement>
+    <ui:VisualElement name="GameOverOverlay" class="game-over-overlay" style="flex-grow: 1;">
+        <ui:VisualElement name="GameOverModal">
+            <ui:Label tabindex="-1" text="Game Over" parse-escape-sequences="true" display-tooltip-when-elided="true" name="GameOverTitle" class="game-over-title" />
+            <ui:Label tabindex="-1" text="Orders fulfilled" parse-escape-sequences="true" display-tooltip-when-elided="true" name="GameOverSubtitle" class="game-over-subtitle" />
+            <ui:Label tabindex="-1" text="0" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Score" class="game-over-score" />
+        </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

@@ -30,9 +30,21 @@ public class DeliveryManager : MonoBehaviour
     private float orderTimer = 0f;
     private readonly List<MealSO> pendingOrders = new();
 
+    private GameManager.State gameState;
+
+    private void Start()
+    {
+        gameStateBus.OnGameStateUpdated += OnGameStateUpdated;
+    }
+
+    private void OnGameStateUpdated(object sender, GameState newState)
+    {
+        this.gameState = newState.State;
+    }
+
     private void Update()
     {
-        if (gameStateBus.GameStateQuery.QueryHandler() != GameManager.State.Playing)
+        if (this.gameState != GameManager.State.Playing)
         {
             return;
         }

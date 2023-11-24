@@ -16,12 +16,15 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float playTimeInSeconds = 90f;
 
     [Header("Events/Bus")]
+    [SerializeField] private EventQueue eventQueue;
     [SerializeField] private GameStateBus gameBus;
 
     private State gameState;
 
     private float timeRemaining = 0f;
     private float tick = 0f;
+
+    private int score = 0;
 
     private void Start()
     {
@@ -32,13 +35,24 @@ public class GameManager : MonoBehaviour
 
     private void OnEnable()
     {
-        gameBus.GameStateQuery.QueryHandler = () => gameState;
-        gameBus.Tick(gameState, timeRemaining);
+        gameBus.GameStateQuery.QueryHandler = () => new GameState() { State = gameState, TimeRemaining = timeRemaining };
+        gameBus.ScoreQuery.QueryHandler = () => score;
+        eventQueue.OnEventDispatched += OnEventDispatched;
     }
 
     private void OnDisable()
     {
         gameBus.GameStateQuery.QueryHandler = null;
+        gameBus.ScoreQuery.QueryHandler = null;
+        eventQueue.OnEventDispatched -= OnEventDispatched;
+    }
+
+    private void OnEventDispatched(object sender, GameEvent e)
+    {
+        if (e.EventName == EventQueue.OnDeliverySuccess)
+        {
+            score++;
+        }
     }
 
     private void Update()
@@ -52,6 +66,8 @@ public class GameManager : MonoBehaviour
                     Debug.Log("Game State: WaitingToStart -> Countdown");
                     gameState = State.Countdown;
                     timeRemaining = countdownInSeconds;
+
+                    gameBus.NotifyGameStateChanged(new GameState() { State = gameState, TimeRemaining = timeRemaining });
                 }
                 break;
 
@@ -62,6 +78,8 @@ public class GameManager : MonoBehaviour
                     Debug.Log("Game State: Countdown -> Playing");
                     gameState = State.Playing;
                     timeRemaining = playTimeInSeconds;
+
+                    gameBus.NotifyGameStateChanged(new GameState() { State = gameState, TimeRemaining = timeRemaining });
                 }
                 break;
 
@@ -72,6 +90,8 @@ public class GameManager : MonoBehaviour
                     Debug.Log("Game State: Playing -> GameOver");
                     gameState = State.GameOver;
                     timeRemaining = 0f;
+
+                    gameBus.NotifyGameStateChanged(new GameState() { State = gameState, TimeRemaining = timeRemaining });
                 }
                 break;
 
@@ -83,7 +103,6 @@ public class GameManager : MonoBehaviour
         if (tick > 1f)
         {
             tick = 0;
-            gameBus.Tick(gameState, timeRemaining);
         }
     }
 }
