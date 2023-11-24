@@ -23,20 +23,20 @@ public class DeliveryManager : MonoBehaviour
     [SerializeField]
     private int maxPendingOrders = 4;
 
-    [Header("Events")]
-    [SerializeField]
-    private EventQueue eventQueue;
+    [Header("Events/Bus")]
+    [SerializeField] private EventQueue eventQueue;
+    [SerializeField] private GameStateBus gameStateBus;
 
     private float orderTimer = 0f;
     private readonly List<MealSO> pendingOrders = new();
 
-    private void Start()
-    {
-        GenerateOrder();
-    }
-
     private void Update()
     {
+        if (gameStateBus.GameStateQuery.QueryHandler() != GameManager.State.Playing)
+        {
+            return;
+        }
+
         if (pendingOrders.Count >= maxPendingOrders)
         {
             return;

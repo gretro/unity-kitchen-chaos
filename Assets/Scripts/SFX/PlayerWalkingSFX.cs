@@ -27,7 +27,11 @@ public class PlayerWalkingSFX : MonoBehaviour
             if (timeSinceLastStep >= stepIntervalInSeconds)
             {
                 timeSinceLastStep = 0f;
-                PlayStepSound();
+
+                if (!audioSource.isPlaying)
+                {
+                    PlayStepSound();
+                }
             }
         }
         else

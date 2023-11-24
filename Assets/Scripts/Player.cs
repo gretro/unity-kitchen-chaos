@@ -21,8 +21,9 @@ public class Player : MonoBehaviour, IKitchenObjectHolder
     [SerializeField]
     private Transform hookPoint;
 
-    [Header("Events")]
+    [Header("Events/Bus")]
     [SerializeField] private EventQueue eventQueue;
+    [SerializeField] private GameStateBus gameStateBus;
 
     private float playerRadius = 0.7f;
     private float playerHeight = 2f;
@@ -154,6 +155,11 @@ public class Player : MonoBehaviour, IKitchenObjectHolder
 
     private void OnInteractAction(object sender, EventArgs e)
     {
+        if (gameStateBus.GameStateQuery.QueryHandler() != GameManager.State.Playing)
+        {
+            return;
+        }
+
         if (Selection != null && Selection.TryGetComponent<IInteractable>(out var interactable))
         {
             interactable.Interact(this);
@@ -162,6 +168,11 @@ public class Player : MonoBehaviour, IKitchenObjectHolder
 
     private void OnAlternateInteractAction(object sender, EventArgs e)
     {
+        if (gameStateBus.GameStateQuery.QueryHandler() != GameManager.State.Playing)
+        {
+            return;
+        }
+
         if (Selection != null && Selection.TryGetComponent<IInteractable>(out var interactable))
         {
             interactable.AlternateInteract(this);

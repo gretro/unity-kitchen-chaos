@@ -16,6 +16,9 @@ public class EventQueue : ScriptableObject
     public const string OnStoveBurned = "STOVE_BURNED";
     public const string OnItemTrashed = "ITEM_TRASHED";
 
+    public const string OnGameStateChanged = "GAME_STATE_CHANGED";
+    public const string OnGameTimerTicked = "GAME_TIMER_TICKED";
+
     public event EventHandler<GameEvent> OnEventDispatched;
 
     public void DispatchEvent(string eventName, GameObject origin, object extraData = null)
